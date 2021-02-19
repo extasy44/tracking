@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-const userSechema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   email: {
     type: String,
     unique: true,
@@ -13,7 +13,7 @@ const userSechema = new mongoose.Schema({
   },
 });
 
-userSechema.pre('save', function () {
+userSchema.pre('save', function (next) {
   const user = this;
   if (!user.isModified('password')) {
     return next();
@@ -23,6 +23,7 @@ userSechema.pre('save', function () {
     if (err) {
       return next(err);
     }
+
     bcrypt.hash(user.password, salt, (err, hash) => {
       if (err) {
         return next(err);
@@ -33,8 +34,9 @@ userSechema.pre('save', function () {
   });
 });
 
-userSechema.methods.comparePassword = function (candidatePassword) {
+userSchema.methods.comparePassword = function (candidatePassword) {
   const user = this;
+
   return new Promise((resolve, reject) => {
     bcrypt.compare(candidatePassword, user.password, (err, isMatch) => {
       if (err) {
@@ -44,8 +46,10 @@ userSechema.methods.comparePassword = function (candidatePassword) {
       if (!isMatch) {
         return reject(false);
       }
+
+      resolve(true);
     });
   });
 };
 
-mongoose.model('User', userSechema);
+module.exports = mongoose.model('User', userSchema);

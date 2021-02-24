@@ -1,5 +1,5 @@
-require('./models/User');
 const express = require('express');
+const cors = require('cors');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 const keys = require('../config/keys');
@@ -8,6 +8,7 @@ const authRoutes = require('./routes/authRoutes');
 const trackRoutes = require('./routes/trackRoutes');
 const requireAuth = require('./middlewares/requireAuth');
 
+app.use(cors());
 app.use(bodyParser.json());
 app.use(authRoutes);
 app.use(trackRoutes);
@@ -15,6 +16,7 @@ app.use(trackRoutes);
 mongoose.connect(keys.mongoURI, {
   useNewUrlParser: true,
   useCreateIndex: true,
+  useUnifiedTopology: true,
 });
 
 mongoose.connection.on('connected', () => {

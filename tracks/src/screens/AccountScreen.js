@@ -5,6 +5,7 @@ import AuthForm from '../components/AuthForm';
 import NavLink from '../components/NavLink';
 import { SafeAreaView } from 'react-navigation';
 import Spacer from '../components/Spacer';
+import { FontAwesome } from '@expo/vector-icons';
 
 const AccountScreen = () => {
   const { signout } = useContext(AuthContext);
@@ -18,5 +19,9 @@ const AccountScreen = () => {
   );
 };
 
+AccountScreen.navigationOptions = {
+  title: 'Add Track',
+  tabBarIcon: <FontAwesome name="plus" size={20} />,
+};
 const styles = StyleSheet.create({});
 export default AccountScreen;
